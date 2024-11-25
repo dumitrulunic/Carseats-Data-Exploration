@@ -1,0 +1,357 @@
+# E-learning Dumitrul Lunic, Andrei-Flavius Vacaru
+
+# 1. Task 1
+Load the data Carseats from the package ISLR
+
+```{r}
+# install(packages = c("ggplot2", "ISLR", "car", "lmtest"))
+library(ggplot2)
+library(ISLR)
+library(car) 
+library(lmtest) 
+
+data <- ISLR::Carseats
+head(data)
+```
+
+# 2. Task 2
+Discover the data using basic statistics and plots (use mean, sd, histogram, boxplot, table, scatter plot, etc.)
+
+```{r}
+summary(data) # Basic statistics
+str(data) # Structure of the data
+```
+
+```{r}
+mean(data$Sales) # Mean of the Sales
+sd(data$Sales) # Standard deviation of the Sales
+
+table(data$ShelveLoc) # Table of the ShelveLoc
+table(Carseats$Urban)   # Table of the Urban
+```
+
+## Sales
+```{r}
+# Histogram of sales
+ggplot(data, aes(x = Sales)) +
+  geom_histogram(aes(y = ..density..), binwidth = 1, fill = "#8d8dd5", color = "black") +
+  stat_function(fun = dnorm, args = list(mean = mean(data$Sales), sd = sd(data$Sales)), color = "red") +
+  labs(title = "Histogram of Sales with Normal Distribution Curve", x = "Sales", y = "Density")
+```
+
+H_0: The Sales are normally distributed
+H_1: The Sales are not normally distributed
+
+```{r}
+shapiro.test(data$Sales) 
+```
+p-value = 0.254 > 0.05, we fail to reject the null hypothesis. **The Sales are normally distributed**.
+
+```{r}
+# Boxplot of Sales
+ggplot(data, aes(x = "", y = Sales)) +
+  geom_boxplot(fill = "#9c7d57", color = "black") +
+  labs(title = "Boxplot of Sales", x = "", y = "Sales")
+```
+
+From boxplot we can conclude:
+- Data is not skewed, since the median is in the middle of the box
+- Data spread is uniform, since the box is uniform
+- Few outliers are present, since there are points outside the whiskers, but only two. So, the data is not heavily skewed.
+
+## Income
+
+```{r} 
+# Histogram of income
+ggplot(data, aes(x = Income)) +
+  geom_histogram(aes(y = ..density..), binwidth = 5, fill = "#d5b58d", color = "black") +
+  stat_function(fun = dnorm, args = list(mean = mean(data$Income), sd = sd(data$Income)), color = "red") +
+  labs(title = "Histogram of Incole with Normal Distribution Curve", x = "Income", y = "Density")
+```
+
+H_0: The Income is normally distributed
+H_1: The Income is not normally distributed
+
+```{r}
+shapiro.test(data$Income)
+```
+
+p-value = 0.0008 < 0.05, we reject the null hypothesis. **The Income is not normally distributed**.
+
+```{r}
+# Boxplot of Income
+ggplot(data, aes(x = "", y = Income)) +
+  geom_boxplot(fill = "#579c77", color = "black") +
+  labs(title = "Boxplot of Income", x = "", y = "Income")
+```
+
+From boxplot we can conclude:
+ - Data is not skewed, since the median is in the middle of the box
+ - There are no outliers, since there are no points outside the whiskers, so the data is not heavily skewed.
+ - Data spread is uniform, since the box is uniform
+  
+## Competitors Price
+
+```{r}
+# Histogram of compPrice
+ggplot(data, aes(x = CompPrice)) +
+  geom_histogram(aes(y = ..density..), binwidth = 2, fill = "#8d8dd5", color = "black") +
+  stat_function(fun = dnorm, args = list(mean = mean(data$CompPrice), sd = sd(data$CompPrice)), color = "red") +
+  labs(title = "Histogram of CompPrice with Normal Distribution Curve", x = "CompPrice", y = "Density")
+```
+
+H_0: The CompPrice is normally distributed
+H_1: The CompPrice is not normally distributed
+
+```{r}
+shapiro.test(data$CompPrice)
+```
+
+p-value = 0.9772 > 0.05, we fail to reject the null hypothesis. **The CompPrice is normally distributed**.
+
+```{r}
+# Boxplot of CompPrice
+ggplot(data, aes(x = "", y = CompPrice)) +
+  geom_boxplot(fill = "#9c5793", color = "black") +
+  labs(title = "Boxplot of CompPrice", x = "", y = "CompPrice")
+```
+
+From boxplot we can conclude:
+- Data is not skewed, since the median is in the middle of the box
+- There are few outliers far away from the whiskers, so the data is not heavily skewed
+- Data spread is uniform, since the box is uniform
+
+## Population
+
+```{r}
+# Histogram for population
+ggplot(data, aes(x = Population)) +
+  geom_histogram(aes(y = ..density..), binwidth = 40, fill = "#d5b58d", color = "black") +
+  stat_function(fun = dnorm, args = list(mean = mean(data$Population), sd = sd(data$Population)), color = "red") +
+  labs(title = "Histogram of Population with Normal Distribution Curve", x = "Population", y = "Density")
+```
+
+H_0: The Population is normally distributed
+H_1: The Population is not normally distributed
+
+```{r}
+shapiro.test(data$Population)
+```
+
+p-value = 0.0004 < 0.05, we reject the null hypothesis. **The Population is not normally distributed**.
+
+```{r}
+# Boxplot of Population
+ggplot(data, aes(x = "", y = Population)) +
+  geom_boxplot(fill = "#add459", color = "black") +
+  labs(title = "Boxplot of Population", x = "", y = "Population")
+```
+
+From boxplot we can conclude:
+- Data is not skewed, since the median is in the middle of the box
+- There are no outliers, since there are no points outside the whiskers, so the data is not heavily skewed
+- Data spread is uniform, since the box is uniform
+
+## Scatter plots
+
+### Sales vs Price
+
+```{r}
+ggplot(data, aes(x = Sales, y = Price)) +
+  geom_point(color = "#212112") +
+  labs(title = "Scatter plot of Sales vs Price", x = "Sales", y = "Price")
+```
+
+From scatter plot we can conclude:
+- Higher prices lead to lower sales (negative correlation)
+- There are few outliers
+- Strong relationship between Sales and Price
+
+### Sales vs CompPrice
+
+```{r}
+ggplot(data, aes(x = Sales, y = CompPrice)) +
+  geom_point(color = "#003cff") +
+  labs(title = "Scatter plot of Sales vs CompPrice", x = "Sales", y = "CompPrice")
+```
+
+From scatter plot we can conclude:
+- No clear relationship between Sales and CompPrice
+- Need to check the correlation with a correlation matrix
+
+### Sales vs Income
+
+```{r}
+ggplot(data, aes(x = Sales, y = Income)) +
+  geom_point(color = "#ff0000") +
+  labs(title = "Scatter plot of Sales vs Income", x = "Sales", y = "Income")
+```
+
+From scatter plot we can conclude:
+- A weak positive correlation between Sales and Income
+- There are few outliers
+
+### Sales vs Population
+
+```{r}
+ggplot(data, aes(x = Sales, y = Population)) +
+  geom_point(color = "#0f0c15") +
+  labs(title = "Scatter plot of Sales vs Population", x = "Sales", y = "Population")
+```
+
+From scatter plot we can conclude:
+- Weak positive correlation between Sales and Population
+- Few outliers present
+
+### Price vs CompPrice
+
+```{r}
+ggplot(data, aes(x = Price, y = CompPrice)) +
+  geom_point(color = "#531f53") +
+  labs(title = "Scatter plot of Price vs CompPrice", x = "Price", y = "CompPrice")
+```
+
+From scatter plot we can conclude:
+ - There is a strong positive correlation between Price and CompPrice
+ - Few outliers present
+ - Higher prices are associated with higher CompPrice
+
+### Advertising vs Income
+
+```{r}
+ggplot(data, aes(x = Advertising, y = Income)) +
+  geom_point(color = "#0a0505") +
+  labs(title = "Scatter plot of Advertising vs Income", x = "Advertising", y = "Income")
+```
+
+From scatter plot we can conclude:
+- No clear relationship between Advertising and Income
+- No advertising also generate low/high income
+- Few outliers present
+
+### Age vs Education
+
+```{r}
+ggplot(data, aes(x = Age, y = Education)) +
+  geom_point(color = "#241a1a") +
+  labs(title = "Scatter plot of Age vs Education", x = "Age", y = "Education")
+```
+
+From scatter plot we can conclude:
+    - No clear relationship between Age of customers and their Education level
+
+
+## Correlation matrix
+
+```{r}
+cor(data[, c("Sales", "Price", "CompPrice", "Income", "Population", "Advertising", "Age", "Education")])
+```
+```{r}
+pairs(data[, c("Sales", "Price", "CompPrice", "Income", "Population", "Advertising", "Age", "Education")])
+```
+
+From the correlation matrix and pairs plot we can conclude:
+- Price and CompPrice have a strong positive correlation
+- Sales and Price have a strong negative correlation
+- No other strong correlations are present
+
+
+
+# 3. Task 3
+```{r}
+# Fit the full model
+model <- lm(Sales ~ Price + CompPrice + Income + Advertising + Age + Education + ShelveLoc + Urban + US, data = Carseats)
+
+# View the summary of the model
+summary(model)
+```
+
+We can make following conclusions from the summary:
+- Several predictors, including CompPrice, Income, Advertising, Price, ShelveLocGood, ShelveLocMedium, and Age, are significant predictors of Sales, since their p-values are very low
+- The R-squared value is 0.86, which means that 86% of the variance in Sales is explained by the predictors.
+- Some predictors, such as Population, Education, UrbanYes, and USYes, are not significant predictors of Sales. Since their p-values are significantly greater then other predictors.
+- F-statistic p-value is very low, which means that the model is significant and the predictors are significant overall.
+
+
+# 4. Task 4
+```{r}
+# Variance Inflation Factor (VIF) of the model
+big_model <- lm(Sales ~ ., data = data)
+step_model <- step(big_model)
+vif(model)  # VIF for full model
+vif(step_model)  # VIF for refined model
+```
+For the both the full and refined models, the VIF values are bellow 5 suggesting that there is no multicollinearity in the model.
+
+
+# 5. Task 5
+```{r}
+big_model <- lm(Sales ~ ., data = data)
+step_model <- step(big_model)
+summary(step_model)
+```
+
+Conclusions:
+- The basic criteria is AIC (Akaikes). The lower the AIC value, the better the model.
+- Final AIC is 23.32 which is the best result after gradual elimination of predictors.
+- Each predictor is highly significant, since the p-values are < 0.01.
+- Price is only predictor with negative coefficient, which means that higher prices lead to lower sales.
+- ShelveLoc has two categories: Good and Medium. Both are positive coefficients, indicating that products with better shelf locations tend to have higher sales.
+
+- R-squared = 0.872 and Adjusted R-squared = 0.8697: These values suggest that the model explains approximately 87% of the variance in the sales data. This is a relatively high value, indicating that the model is a good fit for the data.
+
+# 6. Task 6
+```{r}
+# Refine the model using stepwise selection
+step_model <- step(model)
+summary(step_model)
+
+# 1. Residuals vs Fitted
+residuals_data <- data.frame(
+    Fitted = fitted(step_model),  # Get fitted values
+    Residuals = residuals(step_model)  # Get residuals
+)
+
+# Plot Residuals vs Fitted
+ggplot(residuals_data, aes(x = Fitted, y = Residuals)) +
+    geom_point() +
+    geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
+    labs(title = "Residuals vs Fitted", x = "Fitted", y = "Residuals")
+```
+
+From the residual plot we can conclude:
+ - The residuals are randomly distributed around 0
+  
+
+```{r}
+# 2. Normal Q-Q plot
+qqnorm(residuals(step_model))  # Normal Q-Q plot
+qqline(residuals(step_model))  # Add the line to the plot
+qqPlot(step_model, main = "Normal Q-Q Plot")  # Additional Q-Q plot for verification
+```
+
+From the Q-Q plot we can conclude:
+ - The residuals are normally distributed, since the points are close to the line
+  
+
+```{r}
+# 3. Scale-Location plot
+ggplot(residuals_data, aes(x = Fitted, y = sqrt(abs(Residuals)))) +
+    geom_point() +
+    geom_smooth() +
+    labs(title = "Scale-Location Plot", x = "Fitted", y = "sqrt(|Residuals|)")
+```
+
+From the scale-location plot we can conclude:
+ - The residuals are homoscedastic(constant variance), since the points are randomly distributed around the line
+
+### H_0: The residuals are homoscedastic
+### H_1: The residuals are not homoscedastic
+
+```{r}
+# 4. Durbin-Watson test for autocorrelation of residuals
+dw <- dwtest(step_model)
+dw
+```
+
+p-value = 0.4523 > 0.05, we fail to reject the null hypothesis. **The residuals are not autocorrelated**.
